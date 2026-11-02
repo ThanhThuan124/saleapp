@@ -1,30 +1,95 @@
+
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">E-commerce Website</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+
+        <a class="navbar-brand" href="/">
+            E-commerce Website
+        </a>
+
+        <button class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapsibleNavbar">
             <span class="navbar-toggler-icon"></span>
         </button>
+
         <div class="collapse navbar-collapse" id="collapsibleNavbar">
+
             <ul class="navbar-nav me-auto">
+
                 <li class="nav-item">
-                    <a class="nav-link active" href="/">Trang chủ</a>
+                    <a class="nav-link active" href="/">
+                        Trang chủ
+                    </a>
                 </li>
+
                 {% for c in categories %}
                 <li class="nav-item">
-                    <a class="nav-link" href="/?category_id={{c.id}}">{{c.name}}</a>
+                    <a class="nav-link"
+                       href="/?category_id={{ c.id }}">
+                        {{ c.name }}
+                    </a>
                 </li>
                 {% endfor %}
+
+                {% if current_user.is_authenticated %}
+
                 <li class="nav-item">
-                    <a class="nav-link text-danger" href="/login">&#129489; Đăng nhập</a>
+                    <span class="nav-link">
+                        <img src="{{ current_user.avatar }}"
+                             width="30"
+                             height="30"
+                             class="rounded-circle"
+                             alt="Avatar"/>
+                        Chào {{ current_user.username }}
+                    </span>
                 </li>
+
                 <li class="nav-item">
-                    <a class="nav-link text-success" href="/register">&#128100; Đăng ký</a>
+                    <form method="POST" action="/logout">
+                        <button type="submit"
+                                class="btn btn-link nav-link text-danger">
+                            Đăng xuất
+                        </button>
+                    </form>
                 </li>
+
+                {% else %}
+
+                <li class="nav-item">
+                    <a class="nav-link text-success" href="/login">
+                        Đăng nhập
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link text-success" href="/register">
+                        Đăng ký
+                    </a>
+                </li>
+
+                {% endif %}
+
+                <li class="nav-item">
+                    <a class="nav-link text-danger" href="/cart">
+                        🛒 Giỏ hàng
+                        <span class="badge bg-danger">0</span>
+                    </a>
+                </li>
+
             </ul>
+
             <form class="d-flex" method="get" action="/">
-                <input class="form-control me-2" type="text" placeholder="Tìm sản phẩm..." name="kw" />
-                <button class="btn btn-primary" type="submit">Tìm</button>
+                <input class="form-control me-2"
+                       type="text"
+                       placeholder="Tìm sản phẩm..."
+                       name="kw"/>
+
+                <button class="btn btn-primary" type="submit">
+                    Tìm
+                </button>
             </form>
+
         </div>
     </div>
 </nav>

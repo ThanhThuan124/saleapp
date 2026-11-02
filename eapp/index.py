@@ -1,8 +1,8 @@
 import math
 
 from flask import render_template, request, redirect
-from eapp import app, dao, login
-from flask_login import login_user
+from eapp import app, dao, login ,utils
+from flask_login import login_user, login_required, logout_user
 
 
 @app.route('/')
@@ -19,6 +19,12 @@ def index():
 def login_view():
     return render_template('login.html')
 
+@app.route('/logout',methods=['post'])
+@login_required
+def log_out():
+    logout_user()
+    return redirect('/')
+
 @app.route('/login', methods=['post'])
 def login_process():
     username = request.form.get('username')
@@ -28,11 +34,37 @@ def login_process():
     if u:
         login_user(user=u)
 
-    return redirect('/admin')
+    return redirect('/')
 
 @app.route('/register')
 def register_view():
     return render_template('register.html')
+
+@app.route('/register', methods = ['post'])
+def register_process():
+    confirm=request.form.get('confirm')
+    password=request.form.get('password')
+    err_msg = None
+    if not password or not confirm or confirm != password:
+        err_msg='Mat khau khong khop !'
+    else :
+        data = request.form.copy()
+        del data['confirm']
+        dao.create_user(**data)
+
+    return render_template('register.html',err_msg=err_msg)
+
+@app.route('/api/carts', methods = ['post'])
+def add_to_cart():
+    id = str(request.json.get('id'))
+    if id in cart:
+
+    print(request.json)
+    return {
+        'total_amount':0,
+        'total_quantity':0
+    }
+
 
 @app.context_processor
 def common_responses():
